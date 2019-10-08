@@ -4,14 +4,15 @@ import { toCreateProfile } from './states/createProfile';
 import { toUserDetails, backUserDetails } from './states/userDetails';
 import { toDocumentUpload, backDocumentUpload } from './states/documentUpload';
 import { toGenerateContract} from './states/generateContract';
-import { toDone } from './states/done';
+import { toDone, isDone } from './states/done';
 
 var StateMachine = require('javascript-state-machine');
 
 export const OnboardingProcess = StateMachine.factory({
   data: function(id: string) {      //  <-- use a method that can be called for each instance
     return {
-      id
+      id,
+      isReady: true,
     }
   },
   init: States.Initial,
@@ -20,8 +21,8 @@ export const OnboardingProcess = StateMachine.factory({
     { name: Transitions.Next, from: OnboardingStates.CreateProfile, to: toUserDetails},
     { name: Transitions.Next, from: OnboardingStates.UserDetails, to: toDocumentUpload},
     { name: Transitions.Next, from: OnboardingStates.DocumentUpload, to: toGenerateContract},
-    { name: Transitions.Next, from: OnboardingStates.GenerateContract, to: () => { toDone(); }},
-    //{ name: Transitions.Next, from: OnboardingStates.GenerateContract, to: () => { isDone(toDone, toGenerateContract); }},
+    //{ name: Transitions.Next, from: OnboardingStates.GenerateContract, to: checkDone},
+    { name: Transitions.Next, from: OnboardingStates.GenerateContract, to: () => { return isDone(toDone, toGenerateContract); }},
 
     { name: Transitions.Back, from: OnboardingStates.GenerateContract, to: backDocumentUpload},
     { name: Transitions.Back, from: OnboardingStates.DocumentUpload, to: backUserDetails},
