@@ -12,6 +12,6 @@ export function checkDone(): string {
 }
 
 export function isDone(yesState:FuncParam, noState:FuncParam): string {
-    console.log(`Decide if the the response is yes or now then call that function`);
+    console.log(`Decide if the the response is yes or no then call that function`);
     return yesState();
 }
